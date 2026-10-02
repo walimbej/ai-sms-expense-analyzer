@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>AI Financial Assistant</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 20px;
+      }
+
+      h1 {
+        margin-bottom: 10px;
+      }
+
+      .subtitle {
+        color: #666;
+        margin-bottom: 30px;
+      }
+
+      .input-area {
+        display: flex;
+        gap: 10px;
+      }
+
+      input {
+        flex: 1;
+        padding: 12px;
+        font-size: 16px;
+      }
+
+      button {
+        padding: 12px 20px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      #answer {
+        margin-top: 30px;
+        padding: 20px;
+        background: #f5f5f5;
+        border-radius: 8px;
+        white-space: pre-line;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>AI Financial Assistant</h1>
+
+    <div class="subtitle">
+      Ask questions about your September 2026 expenses.
+    </div>
+
+    <div class="input-area">
+      <input
+        id="question"
+        type="text"
+        placeholder="How much did I spend through ICICI?"
+      />
+
+      <button onclick="askQuestion()">Ask</button>
+    </div>
+
+    <div id="answer">Ask a question to get started.</div>
+
+    <script>
+      async function askQuestion() {
+        const question = document.getElementById("question").value;
+
+        if (!question.trim()) {
+          return;
+        }
+
+        const answer = document.getElementById("answer");
+
+        answer.innerText = "Thinking...";
+
+        try {
+          const response = await fetch(
+            "/ask?question=" + encodeURIComponent(question)
+          );
+
+          const data = await response.json();
+
+          if (data.answer) {
+            answer.innerText = data.answer;
+          } else {
+            answer.innerText = "Error: " + JSON.stringify(data);
+          }
+        } catch (error) {
+          answer.innerText = "Unable to connect to the server.";
+        }
+      }
+    </script>
+  </body>
+</html>
